@@ -75,10 +75,94 @@
 					transform: translateY(0);
 				}
 			}
+			/* Start Modal Styles */
+			#startModal {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(255, 255, 255, 0.95);
+				z-index: 100;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.start-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 2rem;
+				border-radius: 1.5rem;
+				box-shadow: 0 20px 60px rgba(236, 72, 153, 0.3);
+				background: white;
+				text-align: center;
+			}
+			.start-container h2 {
+				margin-bottom: 1rem;
+				color: #ec4899;
+			}
+			.start-container p {
+				margin-bottom: 2rem;
+				color: #4b5563;
+			}
+			.start-container button {
+				padding: 0.75rem 1.5rem;
+				font-size: 1.125rem;
+				font-weight: bold;
+				color: white;
+				background: linear-gradient(to right, #ec4899, #f472b6);
+				border: none;
+				border-radius: 0.75rem;
+				cursor: pointer;
+				transition: transform 0.3s;
+			}
+			.start-container button:hover {
+				transform: scale(1.05);
+			}
 		</style>
 	</head>
 	<body>
-		<div class="valentine-bg">
+		<!-- Start Modal -->
+		<audio id="bgMusic" autoplay loop style="display: none">
+			<source
+				src="./paulyudin-romantic-adventure-182516.mp3"
+				type="audio/mpeg"
+			/>
+		</audio>
+		<div
+			id="startModal"
+			style="
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(255, 255, 255, 0.95);
+				z-index: 100;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			"
+		>
+			<div class="flex flex-col items-center justify-center p-8">
+				<h2 class="text-3xl md:text-5xl font-bold text-pink-600 mb-6">
+					Hi Beb!
+				</h2>
+				<p class="text-lg md:text-2xl text-gray-700 mb-8 text-center">
+					Happy Valentine dan semoga kamu suka dengan hadiah kecil ini. Klik
+					tombol di bawah untuk memulai.
+				</p>
+				<button
+					id="startBtn"
+					class="py-3 px-8 text-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition"
+				>
+					Mulai 💖
+				</button>
+			</div>
+		</div>
+		<div class="valentine-bg" id="mainApp" style="display: none">
 			<div class="card-container">
 				<h1 class="text-3xl md:text-5xl font-bold text-red-600 mb-4 md:mb-5">
 					Selamat Hari Valentine ❤️
@@ -250,7 +334,33 @@
 				btn.style.cursor = "pointer";
 			} // Start the game with the first question
 			window.addEventListener("load", () => {
-				loadQuestion();
+				// Hide main app initially
+				document.getElementById("mainApp").style.display = "none";
+				// Modal logic
+				const startModal = document.getElementById("startModal");
+				const startBtn = document.getElementById("startBtn");
+				const bgMusic = document.getElementById("bgMusic");
+				startBtn.addEventListener("click", () => {
+					startModal.style.display = "none";
+					document.getElementById("mainApp").style.display = "flex";
+					if (bgMusic && bgMusic.paused) {
+						bgMusic.play().catch(() => {});
+					}
+					loadQuestion();
+				});
+			});
+
+			// Start button functionality
+			document.getElementById("startBtn").addEventListener("click", () => {
+				// Hide start modal
+				document.getElementById("startModal").style.display = "none";
+				// Show main app
+				document.getElementById("mainApp").style.display = "block";
+				// Play background music
+				const bgMusic = document.getElementById("bgMusic");
+				bgMusic.play().catch((err) => {
+					console.log("Music play failed:", err);
+				});
 			});
 		</script>
 	</body>
