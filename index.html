@@ -2,6 +2,10 @@
 <html lang="id">
 	<head>
 		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
 		<title>Dear Desy</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<style>
@@ -13,6 +17,7 @@
 			body {
 				overflow: auto;
 				min-height: 100vh;
+				touch-action: manipulation;
 			}
 			.valentine-bg {
 				background: linear-gradient(
@@ -98,7 +103,7 @@
 					<!-- Response -->
 					<div
 						id="response"
-						class="mt-5 md:mt-7 text-lg md:text-2xl font-semibold text-pink-600"
+						class="my-5 md:my-7 text-lg md:text-2xl font-semibold text-pink-600"
 					></div>
 
 					<!-- Answer Button -->
@@ -161,10 +166,8 @@
 				if (currentQuestionIndex < questions.length - 1) {
 					// Re-enable button for next question
 					setTimeout(() => {
-						btn.disabled = false;
-						btn.style.opacity = "1";
-						btn.style.cursor = "pointer";
-						btn.innerText = "Lanjut 💕";
+						currentQuestionIndex++;
+						loadQuestion();
 					}, 500);
 				} else {
 					// On last question, show final message and hide response
@@ -188,7 +191,8 @@
 				const question = questions[currentQuestionIndex];
 				document.getElementById("currentQuestion").innerText =
 					question.question;
-				document.getElementById("response").innerText = "";
+				// Don't clear response - keep it visible
+				// document.getElementById("response").innerText = "";
 
 				// Reset button state
 				isAnswered = false;
