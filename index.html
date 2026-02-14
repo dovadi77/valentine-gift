@@ -270,9 +270,14 @@
 
 				isAnswered = true;
 				const btn = document.getElementById("continueBtn");
+				const rejectBtn = document.getElementById("rejectBtn");
 				btn.disabled = true;
 				btn.style.opacity = "0.6";
 				btn.style.cursor = "not-allowed";
+
+				rejectBtn.disabled = true;
+				rejectBtn.style.opacity = "0.6";
+				rejectBtn.style.cursor = "not-allowed";
 
 				const question = questions[currentQuestionIndex];
 
@@ -306,6 +311,9 @@
 								btn.disabled = false;
 								btn.style.opacity = "1";
 								btn.style.cursor = "pointer";
+								rejectBtn.disabled = false;
+								rejectBtn.style.opacity = "1";
+								rejectBtn.style.cursor = "pointer";
 								isAnswered = false;
 							}, 800);
 						}, 1000);
@@ -371,6 +379,8 @@
 				document.getElementById("currentQuestion").style.display = "block";
 				document.getElementById("continueBtn").style.display = "inline-block";
 				document.getElementById("rejectBtn").style.display = "inline-block";
+				responseDiv = document.getElementById("response");
+				responseDiv.innerHTML = "";
 				loadQuestion();
 			}
 
