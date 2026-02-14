@@ -186,20 +186,18 @@
 				questionElem.style.opacity = 0;
 				const fadeDuration = 500;
 				setTimeout(() => {
-					// Update question only, fade it in
 					if (currentQuestionIndex < questions.length - 1) {
+						// Normal question flow
 						currentQuestionIndex++;
 						questionElem.innerText = questions[currentQuestionIndex].question;
 						questionElem.style.transition = "opacity 1s";
 						questionElem.style.opacity = 1;
 						questionElem.classList.add("response-text");
-						// Wait for question animation, then show answer
 						setTimeout(() => {
 							responseDiv.innerHTML = `<div>${questions[currentQuestionIndex].message}</div>`;
 							responseDiv.style.transition = "opacity 0.8s";
 							responseDiv.style.opacity = 1;
 							responseDiv.classList.add("response-text");
-							// Enable button after both animations
 							setTimeout(() => {
 								btn.disabled = false;
 								btn.style.opacity = "1";
@@ -207,28 +205,8 @@
 								isAnswered = false;
 							}, 800);
 						}, 1000);
-					} else if (!isShowingFinalMessage) {
-						// On last question, fade in question, then answer, then enable button
-						questionElem.style.transition = "opacity 1s";
-						questionElem.style.opacity = 1;
-						questionElem.classList.add("response-text");
-						setTimeout(() => {
-							responseDiv.innerHTML = `<div>${questions[currentQuestionIndex].message}</div>`;
-							responseDiv.style.transition = "opacity 0.8s";
-							responseDiv.style.opacity = 1;
-							responseDiv.classList.add("response-text");
-							setTimeout(() => {
-								isShowingFinalMessage = true;
-								isAnswered = false; // Reset to allow next click
-								btn.disabled = false;
-								btn.style.opacity = "1";
-								btn.style.cursor = "pointer";
-								btn.innerText = "Lihat Pesan Akhir 💕";
-								document.getElementById("rejectBtn").style.display = "none"; // Hide reject button on last question
-							}, 800);
-						}, 1000);
 					} else {
-						// Show final message on second click of last question after fade out, then fade in
+						// Show final message immediately after last answer animation
 						questionElem.style.display = "none";
 						btn.style.display = "none";
 						responseDiv.style.transition = "opacity 1.5s";
@@ -247,6 +225,9 @@
 							if (finalDiv) finalDiv.style.transition = "opacity 1.5s";
 							if (finalDiv) finalDiv.style.opacity = 1;
 						}, 50);
+						// Hide reject button if present
+						const rejectBtn = document.getElementById("rejectBtn");
+						if (rejectBtn) rejectBtn.style.display = "none";
 					}
 				}, fadeDuration);
 			}
