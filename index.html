@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Dear Desy</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+			body {
+				overflow: auto;
+				min-height: 100vh;
+			}
+			.valentine-bg {
+				background: linear-gradient(
+					135deg,
+					#ec4899 0%,
+					#f472b6 25%,
+					#fbcfe8 50%,
+					#fce7f3 75%,
+					#fdf2f8 100%
+				);
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 1rem;
+			}
+			.card-container {
+				background: rgba(255, 255, 255, 0.95);
+				backdrop-filter: blur(10px);
+				border-radius: 1.5rem;
+				box-shadow: 0 20px 60px rgba(236, 72, 153, 0.3);
+				padding: 1.5rem 1rem;
+				max-width: 500px;
+				width: 100%;
+				text-align: center;
+				z-index: 10;
+				position: relative;
+				min-height: auto;
+			}
+			@media (min-width: 640px) {
+				.card-container {
+					padding: 2.5rem 2rem;
+					border-radius: 2rem;
+				}
+			}
+			.buttons-group {
+				display: flex;
+				gap: 1rem;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+			button {
+				transition: all 0.3s ease;
+			}
+			.response-text {
+				animation: fadeInText 1.5s ease-in-out forwards;
+			}
+			@keyframes fadeInText {
+				from {
+					opacity: 0;
+					transform: translateY(-10px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="valentine-bg">
+			<div class="card-container">
+				<h1 class="text-3xl md:text-5xl font-bold text-red-600 mb-4 md:mb-5">
+					Selamat Hari Valentine ❤️
+				</h1>
+				<p
+					class="text-base md:text-2xl text-gray-700 mb-5 md:mb-7 leading-relaxed"
+				>
+					Aku tahu Valentine kali ini kehadiranku tidak ada di sisimu,<br />
+					tapi aku yakin cintaku tetap untukmu.<br />
+					Happy Valentine dari aku <span class="text-5xl md:text-6xl">🐨</span>
+				</p>
+
+				<!-- Question Container -->
+				<div id="questionContainer" class="mb-5 md:mb-7">
+					<p
+						id="currentQuestion"
+						class="font-semibold text-gray-800 mb-5 md:mb-7 text-lg md:text-2xl leading-relaxed"
+					>
+						Apakah kamu menerima hadiah Valentine ini?
+					</p>
+
+					<!-- Response -->
+					<div
+						id="response"
+						class="mt-5 md:mt-7 text-lg md:text-2xl font-semibold text-pink-600"
+					></div>
+
+					<!-- Answer Button -->
+					<div class="buttons-group">
+						<button
+							id="continueBtn"
+							onclick="answerQuestion()"
+							class="w-full py-3 md:py-4 px-4 md:px-6 text-lg md:text-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold rounded-lg md:rounded-xl transition duration-300 transform hover:scale-105 shadow-lg"
+						>
+							Lanjut 💕
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			const questions = [
+				{
+					question: "Aku tahu aku salah... Maukah kamu dengar aku?",
+					message: "Terima kasih sudah mau mendengarkan 💙",
+				},
+				{
+					question: "Aku benar-benar menyesal dengan semua yang aku lakukan",
+					message: "Maafmu berarti dunia bagiku 🙏",
+				},
+				{
+					question: "Kamu sangat berharga bagiku, percayakah kamu itu?",
+					message: "Aku janji akan lebih baik untukmu 💪",
+				},
+				{
+					question: "Bisakah kita mulai dari awal? Bersama lagi?",
+					message: "Terima kasih telah memberi aku kesempatan kedua 🌹",
+				},
+				{
+					question: "Apakah kamu mau melewati ini bersama aku?",
+					message: "Cintaku untuk mu tidak akan pernah berubah ❤️",
+				},
+			];
+
+			let currentQuestionIndex = 0;
+			let isAnswered = false;
+
+			function answerQuestion() {
+				if (isAnswered) return; // Prevent multiple clicks
+
+				isAnswered = true;
+				const btn = document.getElementById("continueBtn");
+				btn.disabled = true;
+				btn.style.opacity = "0.6";
+				btn.style.cursor = "not-allowed";
+
+				const question = questions[currentQuestionIndex];
+
+				// Show response with animation
+				const responseDiv = document.getElementById("response");
+				responseDiv.innerHTML = `<div class="response-text">${question.message}</div>`;
+
+				// Move to next question or final message when button is clicked again
+				if (currentQuestionIndex < questions.length - 1) {
+					// Re-enable button for next question
+					setTimeout(() => {
+						btn.disabled = false;
+						btn.style.opacity = "1";
+						btn.style.cursor = "pointer";
+						btn.innerText = "Lanjut 💕";
+					}, 500);
+				} else {
+					// On last question, show final message and hide response
+					setTimeout(() => {
+						document.getElementById("response").innerHTML = `
+							<div class="text-center">
+								<p class="text-2xl md:text-4xl mb-3 md:mb-5 response-text">Aku benar-benar menyesal 💔</p>
+								<p class="text-xl md:text-2xl mb-2 md:mb-4 response-text">Terima kasih telah mendengarkan permintaan maafku...</p>
+								<p class="mt-3 md:mt-5 text-base md:text-xl text-gray-600 response-text">Aku akan buktikan bahwa aku bisa berubah untuk mu 💙</p>
+								<button onclick="location.reload()" class="mt-4 md:mt-6 bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 md:py-4 px-6 md:px-8 text-lg md:text-2xl rounded-lg">
+									Ulang Lagi 🔄
+								</button>
+							</div>
+						`;
+						document.getElementById("questionContainer").style.display = "none";
+					}, 500);
+				}
+			}
+
+			function loadQuestion() {
+				const question = questions[currentQuestionIndex];
+				document.getElementById("currentQuestion").innerText =
+					question.question;
+				document.getElementById("response").innerText = "";
+
+				// Reset button state
+				isAnswered = false;
+				const btn = document.getElementById("continueBtn");
+				btn.disabled = false;
+				btn.style.opacity = "1";
+				btn.style.cursor = "pointer";
+			} // Start the game with the first question
+			window.addEventListener("load", () => {
+				loadQuestion();
+			});
+		</script>
+	</body>
+</html>
