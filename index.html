@@ -107,7 +107,7 @@
 					></div>
 
 					<!-- Answer Button -->
-					<div class="buttons-group">
+					<div class="buttons-group flex flex-col gap-3 items-stretch">
 						<button
 							id="continueBtn"
 							onclick="answerQuestion()"
@@ -115,6 +115,19 @@
 						>
 							Lanjut 💕
 						</button>
+						<button
+							id="rejectBtn"
+							onclick="rejectMessage()"
+							class="w-full py-3 md:py-4 px-4 md:px-6 text-lg md:text-xl bg-gray-300 text-gray-500 font-bold rounded-lg md:rounded-xl transition duration-300 shadow-md hover:bg-gray-400 hover:text-gray-700 cursor-pointer opacity-90"
+						>
+							Tolak 🚫
+						</button>
+						<script>
+							function rejectMessage() {
+								const responseDiv = document.getElementById("response");
+								responseDiv.innerHTML = `<div class="response-text">Maaf ya, aku benar-benar ingin memperbaiki semuanya. Yuk klik lanjut.</div>`;
+							}
+						</script>
 					</div>
 				</div>
 			</div>
@@ -146,6 +159,7 @@
 
 			let currentQuestionIndex = 0;
 			let isAnswered = false;
+			let isShowingFinalMessage = false;
 
 			function answerQuestion() {
 				if (isAnswered) return; // Prevent multiple clicks
@@ -158,42 +172,94 @@
 
 				const question = questions[currentQuestionIndex];
 
-				// Show response with animation
+				// Animate out both question and answer
 				const responseDiv = document.getElementById("response");
-				responseDiv.innerHTML = `<div class="response-text">${question.message}</div>`;
-
-				// Move to next question or final message when button is clicked again
-				if (currentQuestionIndex < questions.length - 1) {
-					// Re-enable button for next question
-					setTimeout(() => {
+				const questionElem = document.getElementById("currentQuestion");
+				responseDiv.classList.remove("response-text");
+				questionElem.classList.remove("response-text");
+				responseDiv.style.opacity = 1;
+				questionElem.style.opacity = 1;
+				// Add fade out
+				responseDiv.style.transition = "opacity 0.5s";
+				questionElem.style.transition = "opacity 0.5s";
+				responseDiv.style.opacity = 0;
+				questionElem.style.opacity = 0;
+				const fadeDuration = 500;
+				setTimeout(() => {
+					// Update question only, fade it in
+					if (currentQuestionIndex < questions.length - 1) {
 						currentQuestionIndex++;
-						loadQuestion();
-					}, 500);
-				} else {
-					// On last question, show final message
-					setTimeout(() => {
-						document.getElementById("currentQuestion").style.display = "none";
-						document.getElementById("continueBtn").style.display = "none";
-						document.getElementById("response").innerHTML = `
-							<div class="text-center">
-								<p class="text-2xl md:text-4xl mb-3 md:mb-5 response-text">Aku benar-benar menyesal 💔</p>
-								<p class="text-xl md:text-2xl mb-2 md:mb-4 response-text">Terima kasih telah mendengarkan permintaan maafku...</p>
-								<p class="mt-3 md:mt-5 text-base md:text-xl text-gray-600 response-text">Aku akan buktikan bahwa aku bisa berubah untuk mu 💙</p>
-								<button onclick="location.reload()" class="mt-4 md:mt-6 bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 md:py-4 px-6 md:px-8 text-lg md:text-2xl rounded-lg">
+						questionElem.innerText = questions[currentQuestionIndex].question;
+						questionElem.style.transition = "opacity 1s";
+						questionElem.style.opacity = 1;
+						questionElem.classList.add("response-text");
+						// Wait for question animation, then show answer
+						setTimeout(() => {
+							responseDiv.innerHTML = `<div>${questions[currentQuestionIndex].message}</div>`;
+							responseDiv.style.transition = "opacity 0.8s";
+							responseDiv.style.opacity = 1;
+							responseDiv.classList.add("response-text");
+							// Enable button after both animations
+							setTimeout(() => {
+								btn.disabled = false;
+								btn.style.opacity = "1";
+								btn.style.cursor = "pointer";
+								isAnswered = false;
+							}, 800);
+						}, 1000);
+					} else if (!isShowingFinalMessage) {
+						// On last question, fade in question, then answer, then enable button
+						questionElem.style.transition = "opacity 1s";
+						questionElem.style.opacity = 1;
+						questionElem.classList.add("response-text");
+						setTimeout(() => {
+							responseDiv.innerHTML = `<div>${questions[currentQuestionIndex].message}</div>`;
+							responseDiv.style.transition = "opacity 0.8s";
+							responseDiv.style.opacity = 1;
+							responseDiv.classList.add("response-text");
+							setTimeout(() => {
+								isShowingFinalMessage = true;
+								isAnswered = false; // Reset to allow next click
+								btn.disabled = false;
+								btn.style.opacity = "1";
+								btn.style.cursor = "pointer";
+								btn.innerText = "Lihat Pesan Akhir 💕";
+								document.getElementById("rejectBtn").style.display = "none"; // Hide reject button on last question
+							}, 800);
+						}, 1000);
+					} else {
+						// Show final message on second click of last question after fade out, then fade in
+						questionElem.style.display = "none";
+						btn.style.display = "none";
+						responseDiv.style.transition = "opacity 1.5s";
+						responseDiv.style.opacity = 1;
+						responseDiv.innerHTML = `<div class=\"text-center response-text\" style=\"opacity:0;\">
+								<p class=\"text-2xl md:text-4xl mb-3 md:mb-5\">Aku benar-benar menyesal 💔</p>
+								<p class=\"text-xl md:text-2xl mb-2 md:mb-4\">Terima kasih telah mendengarkan permintaan maafku...</p>
+								<p class=\"mt-3 md:mt-5 text-base md:text-xl text-gray-600\">Aku akan buktikan bahwa aku bisa berubah untuk mu 💙</p>
+								<button onclick=\"location.reload()\" class=\"mt-4 md:mt-6 bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 md:py-4 px-6 md:px-8 text-lg md:text-2xl rounded-lg\">
 									Ulang Lagi 🔄
 								</button>
-							</div>
-						`;
-					}, 500);
-				}
+							</div>`;
+						// Fade in the final message
+						setTimeout(() => {
+							const finalDiv = responseDiv.querySelector(".response-text");
+							if (finalDiv) finalDiv.style.transition = "opacity 1.5s";
+							if (finalDiv) finalDiv.style.opacity = 1;
+						}, 50);
+					}
+				}, fadeDuration);
 			}
 
 			function loadQuestion() {
 				const question = questions[currentQuestionIndex];
-				document.getElementById("currentQuestion").innerText =
-					question.question;
-				// Don't clear response - keep it visible
-				// document.getElementById("response").innerText = "";
+				const questionElem = document.getElementById("currentQuestion");
+				// Animate question text
+				questionElem.classList.remove("response-text");
+				// Wait for reflow to restart animation
+				void questionElem.offsetWidth;
+				questionElem.innerText = question.question;
+				questionElem.classList.add("response-text");
 
 				// Reset button state
 				isAnswered = false;
