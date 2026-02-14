@@ -189,7 +189,26 @@
 						id="response"
 						class="my-5 md:my-7 text-lg md:text-2xl font-semibold text-pink-600"
 					></div>
-
+					<div
+						id="finalResponse"
+						class="my-5 md:my-7 text-lg md:text-2xl font-semibold text-pink-600"
+						style="display: none"
+					>
+						<div class="text-center response-text">
+							<p class="text-xl md:text-2xl mb-2 md:mb-4">
+								Terima kasih sudah memberikan aku kesempatan ini...
+							</p>
+							<p class="mt-3 md:mt-5 text-base md:text-xl text-gray-600">
+								Aku janji akan lebih perhatian dan lebih baik untuk kita 💙
+							</p>
+							<button
+								class="mt-4 md:mt-6 bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 md:py-4 px-6 md:px-8 text-lg md:text-2xl rounded-lg"
+								onclick="resetGame()"
+							>
+								Ulang Lagi 🔄
+							</button>
+						</div>
+					</div>
 					<!-- Answer Button -->
 					<div class="buttons-group flex flex-col gap-3 items-stretch">
 						<button
@@ -221,23 +240,24 @@
 			const questions = [
 				{
 					question: "Aku tahu aku salah... Maukah kamu dengar aku?",
-					message: "Terima kasih sudah mau mendengarkan 💙",
+					message: "Aku senang kamu mau mendengarkan 💙",
 				},
 				{
 					question: "Aku benar-benar menyesal dengan semua yang aku lakukan",
-					message: "Maafmu berarti dunia bagiku 🙏",
+					message: "Aku tahu ada banyak yang perlu aku benahi 🙏",
 				},
 				{
 					question: "Kamu sangat berharga bagiku, percayakah kamu itu?",
-					message: "Aku janji akan lebih baik untukmu 💪",
+					message: "Aku akan buktikan dengan tindakan, bukan kata-kata 💪",
 				},
 				{
 					question: "Bisakah kita mulai dari awal? Bersama lagi?",
-					message: "Terima kasih telah memberi aku kesempatan kedua 🌹",
+					message:
+						"Bisa kita coba lagi? Aku ingin jadi lebih baik untuk kita 🌹",
 				},
 				{
 					question: "Apakah kamu mau melewati ini bersama aku?",
-					message: "Cintaku untuk mu tidak akan pernah berubah ❤️",
+					message: "Semuanya berarti ketika bersama kamu ❤️",
 				},
 			];
 
@@ -295,14 +315,7 @@
 						btn.style.display = "none";
 						responseDiv.style.transition = "opacity 1.5s";
 						responseDiv.style.opacity = 1;
-						responseDiv.innerHTML = `<div class=\"text-center response-text\" style=\"opacity:0;\">
-								<p class=\"text-2xl md:text-4xl mb-3 md:mb-5\">Aku benar-benar menyesal 💔</p>
-								<p class=\"text-xl md:text-2xl mb-2 md:mb-4\">Terima kasih telah mendengarkan permintaan maafku...</p>
-								<p class=\"mt-3 md:mt-5 text-base md:text-xl text-gray-600\">Aku akan buktikan bahwa aku bisa berubah untuk mu 💙</p>
-								<button onclick=\"location.reload()\" class=\"mt-4 md:mt-6 bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 md:py-4 px-6 md:px-8 text-lg md:text-2xl rounded-lg\">
-									Ulang Lagi 🔄
-								</button>
-							</div>`;
+						document.getElementById("finalResponse").style.display = "block";
 						// Fade in the final message
 						setTimeout(() => {
 							const finalDiv = responseDiv.querySelector(".response-text");
@@ -349,6 +362,17 @@
 					loadQuestion();
 				});
 			});
+
+			function resetGame() {
+				currentQuestionIndex = 0;
+				isAnswered = false;
+				isShowingFinalMessage = false;
+				document.getElementById("finalResponse").style.display = "none";
+				document.getElementById("currentQuestion").style.display = "block";
+				document.getElementById("continueBtn").style.display = "inline-block";
+				document.getElementById("rejectBtn").style.display = "inline-block";
+				loadQuestion();
+			}
 
 			// Start button functionality
 			document.getElementById("startBtn").addEventListener("click", () => {
